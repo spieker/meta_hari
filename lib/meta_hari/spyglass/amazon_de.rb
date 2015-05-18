@@ -5,11 +5,11 @@ module MetaHari
         %w(amazon.de www.amazon.de).include? uri.host.downcase
       end
 
-      def spy
-        OpenStruct.new(name: title, image: image, description: '')
-      end
-
       protected
+
+      def spy_list
+        [:spy_amazon]
+      end
 
       def title
         document.css('#productTitle').text
@@ -19,6 +19,10 @@ module MetaHari
         data = document.css('img#landingImage')
         data &&= data.attr 'data-old-hires'
         data && data.value
+      end
+
+      def spy_amazon
+        { 'name' => title, 'image' => image, 'description' => '' }
       end
     end
   end

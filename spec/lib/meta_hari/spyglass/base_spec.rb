@@ -54,7 +54,7 @@ describe MetaHari::Spyglass::Base do
         allow(instance).to receive(:fetch_data).and_return(html)
       end
 
-      it { should be_an OpenStruct }
+      it { should be_an MetaHari::Product }
       it { should respond_to :name }
       it { should respond_to :image }
       it { should respond_to :description }
@@ -88,7 +88,7 @@ describe MetaHari::Spyglass::Base do
         allow(instance).to receive(:fetch_data).and_return(html)
       end
 
-      it { should be_an OpenStruct }
+      it { should be_an MetaHari::Product }
       it { should respond_to :name }
       it { should respond_to :image }
       it { should respond_to :description }
@@ -126,7 +126,7 @@ describe MetaHari::Spyglass::Base do
         allow(instance).to receive(:fetch_data).and_return(html)
       end
 
-      it { should be_an OpenStruct }
+      it { should be_an MetaHari::Product }
       it { should respond_to :name }
       it { should respond_to :image }
       it { should respond_to :description }

@@ -30,7 +30,7 @@ thous informations to the method `MetaHari.spy`.
 
 ```ruby
 product = MetaHari.spy('http://www.amazon.de/Gastroback-42429-Design-Wasserkocher-Advanced/dp/B000LQXC2Q/ref=sr_1_1')
-product.inspect # => #<OpenStruct name="Gastroback 42429 Design Wasserkocher Advanced Pro", image="http://ecx.images-amazon.com/images/I/814Yl6mxLsL._SL1500_.jpg", description="">
+product.inspect # => #<MetaHari::Product:0x007fd9dba99158 @name="Gastroback 42429 Design Wasserkocher Advanced Pro", @image="http://ecx.images-amazon.com/images/I/814Yl6mxLsL._SL1500_.jpg", @description="">
 ```
 
 ## Implemented spyglasses
@@ -41,8 +41,9 @@ custom shops which can not be spyed by the generic spyglass
 
 * Amazon DE
 * Generic
-  * Shops using [JSON-LD](https://developers.google.com/structured-data/rich-snippets/products)
-  * Shops using [Microdata](https://developers.google.com/structured-data/rich-snippets/products)
+  * [JSON-LD](https://developers.google.com/structured-data/rich-snippets/products)
+  * [Microdata](https://developers.google.com/structured-data/rich-snippets/products)
+  * [Open Graph](http://ogp.me/)
 
 ### Creating a spyglass
 
@@ -58,11 +59,11 @@ module MetaHari
         %w(amazon.de www.amazon.de).include? uri.host.downcase
       end
 
-      def spy
-        OpenStruct.new(name: title, image: image, description: '')
-      end
-
       protected
+
+      def spy_list
+        [:spy_amazon]
+      end
 
       def title
         document.css('#productTitle').text
@@ -72,6 +73,10 @@ module MetaHari
         data = document.css('img#landingImage')
         data &&= data.attr 'data-old-hires'
         data && data.value
+      end
+
+      def spy_amazon
+        { 'name' => title, 'image' => image, 'description' => '' }
       end
     end
   end

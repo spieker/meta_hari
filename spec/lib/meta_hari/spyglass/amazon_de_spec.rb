@@ -39,7 +39,7 @@ describe MetaHari::Spyglass::AmazonDe do
     let(:html) { resource_content 'amazon_de.html' }
     subject    { instance.spy }
 
-    it { should be_an OpenStruct }
+    it { should be_an MetaHari::Product }
     it { should respond_to :name }
     it { should respond_to :image }
     it { should respond_to :description }

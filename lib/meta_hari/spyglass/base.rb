@@ -14,14 +14,19 @@ module MetaHari
       end
 
       def spy
-        OpenStruct.new [
-          spy_open_graph,
-          spy_microdata,
-          spy_json_ld
-        ].inject({}) { |a, e| a.merge e }
+        spy_list.map { |method| send method }
+          .inject(MetaHari::Product.new) { |a, e| a.apply e }
       end
 
       protected
+
+      def spy_list
+        [
+          :spy_json_ld,
+          :spy_microdata,
+          :spy_open_graph
+        ]
+      end
 
       def user_agent
         [

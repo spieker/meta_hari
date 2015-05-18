@@ -5,6 +5,7 @@ require 'net/http'
 require 'microdata'
 require 'meta_hari/version'
 require 'meta_hari/helpers'
+require 'meta_hari/product'
 require 'meta_hari/spyglass'
 
 # MetaHary will find product informations for a given product link. The
