@@ -15,8 +15,9 @@ module MetaHari
 
       def spy
         OpenStruct.new [
-          spy_json_ld,
-          spy_microdata
+          spy_open_graph,
+          spy_microdata,
+          spy_json_ld
         ].inject({}) { |a, e| a.merge e }
       end
 
@@ -63,6 +64,11 @@ module MetaHari
       def spy_microdata
         microdata = MetaHari::Helpers::Microdata.new(document, uri.to_s)
         microdata.data
+      end
+
+      def spy_open_graph
+        open_graph = MetaHari::Helpers::OpenGraph.new(document)
+        open_graph.data
       end
     end
   end

@@ -116,5 +116,41 @@ describe MetaHari::Spyglass::Base do
         expect(subject.description).to eql expected_value
       end
     end
+
+    context 'with Open Graph document' do
+      let(:html)     { resource_content 'arzberg_porzellan.html' }
+      let(:instance) { described_class.new(uri) }
+      subject        { instance.spy }
+
+      before :each do
+        allow(instance).to receive(:fetch_data).and_return(html)
+      end
+
+      it { should be_an OpenStruct }
+      it { should respond_to :name }
+      it { should respond_to :image }
+      it { should respond_to :description }
+
+      it 'has the correct name' do
+        expect(subject.name).to eql 'Sauceboat 0.35 l FORM 1382 | BLAUBLÜTEN'
+      end
+
+      it 'has the correct image url' do
+        expected_value = [
+          'http://arzberg-c00.kxcdn.com/cache/dc/db',
+          'dcdbb5956e1f9fb60de351fbd21a9c4d.jpg'
+        ].join('/')
+        expect(subject.image).to eql expected_value
+      end
+
+      it 'has the correct description' do
+        expected_value = [
+          'Order online our Sauceboat 0.35 l FORM 1382 | BLAUBLÜTEN. ✓ Large',
+          'Range ✓ Best Quality ✓ Directly from the Manufacturer ▻',
+          'Arzberg-Porzellan.com'
+        ].join(' ')
+        expect(subject.description).to eql expected_value
+      end
+    end
   end
 end
