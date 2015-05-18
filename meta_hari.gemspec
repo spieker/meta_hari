@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-rubocop', '~> 1.2.0'
   spec.add_development_dependency 'pry', '~> 0.10.1'
   spec.add_development_dependency 'nokogiri', '~> 1.6.6'
+  spec.add_development_dependency 'microdata', '~> 0.0.3'
 end

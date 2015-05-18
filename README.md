@@ -42,6 +42,7 @@ custom shops which can not be spyed by the generic spyglass
 * Amazon DE
 * Generic
   * Shops using [JSON-LD](https://developers.google.com/structured-data/rich-snippets/products)
+  * Shops using [Microdata](https://developers.google.com/structured-data/rich-snippets/products)
 
 ### Creating a spyglass
 

@@ -77,5 +77,44 @@ describe MetaHari::Spyglass::Base do
         expect(subject.description).to eql expected_value
       end
     end
+
+    context 'with Microdata document' do
+      let(:uri)  { URI.parse 'http://baby-markt.de/' }
+      let(:instance) { described_class.new(uri) }
+      let(:html)     { resource_content 'baby_markt_de.html' }
+      subject { instance.spy }
+
+      before :each do
+        allow(instance).to receive(:fetch_data).and_return(html)
+      end
+
+      it { should be_an OpenStruct }
+      it { should respond_to :name }
+      it { should respond_to :image }
+      it { should respond_to :description }
+
+      it 'has the correct name' do
+        expect(subject.name).to eql 'BIG Bobby Car Classic rot'
+      end
+
+      it 'has the correct image url' do
+        expected_value = [
+          'http://www.baby-markt.de/out/pictures/generated/product/1',
+          '390_390_80/n_a006497_001.jpg?20150511132615'
+        ].join('/')
+        expect(subject.image).to eql expected_value
+      end
+
+      it 'has the correct description' do
+        expected_value = [
+          'BIG Bobby Car ClassicArtikelnummer: 800001303 Dank des',
+          'kindgerechten Designs, der unverwüstlichen Konstruktion und der',
+          'vielseitigen Funktionalität iist das BIG Bobby Car Classic das',
+          'meistgekaufte Kinderrutsch-fahrzeug der Welt. Und dabei macht BIG',
+          'Bobby...'
+        ].join(' ')
+        expect(subject.description).to eql expected_value
+      end
+    end
   end
 end
