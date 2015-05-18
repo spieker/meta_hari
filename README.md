@@ -1,5 +1,7 @@
 # MetaHari
 
+[ ![Codeship Status for spieker/meta_hari](https://codeship.com/projects/82a2a250-dfbd-0132-10c4-5a00e6f9bcb3/status?branch=master)](https://codeship.com/projects/80646)
+
 Meta Hari is receiving product informations from a given product link
 (i.e. from Amazon).
 
