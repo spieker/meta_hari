@@ -1,0 +1,63 @@
+require 'ostruct'
+
+module MetaHari
+  module Spyglass
+    class Base
+      attr_reader :uri
+
+      def self.suitable?(uri)
+        fail StandardError.new, "not implemented for '#{uri.host}'"
+      end
+
+      def initialize(uri)
+        @uri = uri
+      end
+
+      def spy
+        OpenStruct.new [
+          spy_json_ld
+        ].inject({}) { |a, e| a.merge e }
+      end
+
+      protected
+
+      def user_agent
+        [
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5)',
+          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125',
+          'Safari/537.36'
+        ].join(' ')
+      end
+
+      def fetch_request
+        path = uri.path.empty? ? '/' : uri.path
+        Net::HTTP::Get.new path, 'User-Agent' => user_agent
+      end
+
+      def fetch_response
+        Net::HTTP.start uri.host, uri.port do |http|
+          http.request fetch_request
+        end
+      end
+
+      def fetch_data(limit = 10)
+        return @_data if @_data
+        fail ArgumentError.new, 'HTTP redirect too deep' if limit == 0
+        case res = fetch_response
+        when Net::HTTPSuccess     then @_data = res.body
+        when Net::HTTPRedirection then fetch_data res['location'], limit - 1
+        else res.error!
+        end
+      end
+
+      def document
+        @document ||= Nokogiri::HTML fetch_data
+      end
+
+      def spy_json_ld
+        json_ld = MetaHari::Helpers::JsonLd.new(document)
+        json_ld.data
+      end
+    end
+  end
+end

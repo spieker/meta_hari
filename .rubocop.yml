@@ -1,0 +1,10 @@
+AllCops:
+  Exclude:
+    - 'meta_hari.gemspec'
+    - 'Guardfile'
+
+Style/Documentation:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: true
