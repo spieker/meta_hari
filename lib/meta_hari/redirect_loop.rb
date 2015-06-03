@@ -1,0 +1,2 @@
+class RedirectLoop < Exception
+end

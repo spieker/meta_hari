@@ -4,13 +4,15 @@ module MetaHari
   module Spyglass
     class Base
       attr_reader :uri
+      attr_reader :iteration
 
       def self.suitable?(uri)
         fail StandardError.new, "not implemented for '#{uri.host}'"
       end
 
-      def initialize(uri)
-        @uri = uri
+      def initialize(uri, iteration = 0)
+        @uri       = uri
+        @iteration = iteration
       end
 
       def spy
@@ -21,11 +23,7 @@ module MetaHari
       protected
 
       def spy_list
-        [
-          :spy_json_ld,
-          :spy_microdata,
-          :spy_open_graph
-        ]
+        %i(spy_json_ld spy_microdata spy_open_graph)
       end
 
       def user_agent
@@ -47,12 +45,14 @@ module MetaHari
         end
       end
 
-      def fetch_data(limit = 10)
+      def fetch_data
         return @_data if @_data
-        fail ArgumentError.new, 'HTTP redirect too deep' if limit == 0
         case res = fetch_response
-        when Net::HTTPSuccess     then @_data = res.body
-        when Net::HTTPRedirection then fetch_data res['location'], limit - 1
+        when Net::HTTPSuccess
+          @_data = res.body
+        when Net::HTTPRedirection
+          notification = RedirectNotification.new res['location'], iteration + 1
+          fail notification, 'Redirection'
         else res.error!
         end
       end

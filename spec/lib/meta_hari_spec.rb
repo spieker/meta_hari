@@ -26,7 +26,7 @@ describe MetaHari do
 
     it 'creates an instance of the suitable class' do
       uri = URI.parse 'http://example.com'
-      expect(MetaHari::Spyglass::Base).to receive(:new).with(uri)
+      expect(MetaHari::Spyglass::Base).to receive(:new).with(uri, 0)
       MetaHari.send :suitable_spyglass_instance, uri
     end
 
@@ -34,6 +34,32 @@ describe MetaHari do
       uri = URI.parse 'http://example.com'
       spyglass = MetaHari.send :suitable_spyglass_instance, uri
       expect(spyglass).to be_instance_of MetaHari::Spyglass::Base
+    end
+  end
+
+  describe '#spy' do
+    context 'with redirect' do
+      it 'calls the spy method again with the new location' do
+        redirect = Net::HTTPRedirection.new({}, 301, 'foo')
+        redirect['location'] = 'http://example.com/new'
+        original_spy = MetaHari.method(:spy)
+        allow(MetaHari).to receive(:spy) { |a| original_spy.call(a) }
+        expect(MetaHari).to receive(:spy).with('http://example.com/new', 1)
+        did_once = false
+        allow_any_instance_of(MetaHari::Spyglass::Base).to(
+          receive(:fetch_response)
+        ) do
+          if did_once
+            success = Net::HTTPSuccess.new({}, 200, 'foo')
+            allow(success).to receive(:body).and_return('')
+            success
+          else
+            did_once = true
+            redirect
+          end
+        end
+        MetaHari.spy('http://example.com')
+      end
     end
   end
 end

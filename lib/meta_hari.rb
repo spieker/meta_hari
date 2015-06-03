@@ -3,6 +3,7 @@ require 'json'
 require 'uri'
 require 'net/http'
 require 'microdata'
+require 'meta_hari/redirect_notification'
 require 'meta_hari/version'
 require 'meta_hari/helpers'
 require 'meta_hari/product'
@@ -19,17 +20,20 @@ require 'meta_hari/spyglass'
 # ```
 module MetaHari
   class <<self
-    def spy(url)
-      uri = URI.parse url
-      spyglass = suitable_spyglass_instance uri
+    def spy(uri, iteration = 0)
+      uri = URI.parse uri unless uri.is_a? URI
+      spyglass = suitable_spyglass_instance uri, iteration
       spyglass.spy
+    rescue RedirectNotification => redirect
+      raise RedirectLoop.new, 'to many redirects' if redirect.iteration > 5
+      spy redirect.uri, redirect.iteration
     end
 
     private
 
-    def suitable_spyglass_instance(uri)
+    def suitable_spyglass_instance(uri, iteration = 0)
       klass = find_suitable_spyglass(uri)
-      klass.new(uri)
+      klass.new(uri, iteration)
     end
 
     # Finding a suitable spyglass for the given URL. If no suitable spyglass

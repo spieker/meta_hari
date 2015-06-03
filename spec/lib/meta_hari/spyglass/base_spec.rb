@@ -26,12 +26,6 @@ describe MetaHari::Spyglass::Base do
       subject.send :fetch_data
     end
 
-    it 'fails when redirection limit is zero' do
-      expect do
-        subject.send :fetch_data, 0
-      end.to raise_exception
-    end
-
     it 'fires an http request' do
       http = OpenStruct.new request: nil
       fetch_request = subject.send :fetch_request
@@ -41,6 +35,38 @@ describe MetaHari::Spyglass::Base do
         uri.host, uri.port
       ).and_yield(http).and_return OpenStruct.new(:'error!' => nil)
       subject.send :fetch_data
+    end
+
+    context 'with redirect' do
+      before :each do
+        redirect = Net::HTTPRedirection.new({}, 301, 'foo')
+        redirect['location'] = 'http://example.com/new'
+        allow(subject).to receive(:fetch_response).and_return redirect
+      end
+
+      it 'throws a redirection notification' do
+        expect do
+          subject.send :fetch_data
+        end.to raise_error(RedirectNotification)
+      end
+
+      context 'RedirectNotification' do
+        it 'contains the target url' do
+          begin
+            subject.send :fetch_data
+          rescue RedirectNotification => redirect
+            expect(redirect.uri).to match 'http://example.com/new'
+          end
+        end
+
+        it 'contains the iteration' do
+          begin
+            subject.send :fetch_data
+          rescue RedirectNotification => redirect
+            expect(redirect.iteration).to match 1
+          end
+        end
+      end
     end
   end
 
