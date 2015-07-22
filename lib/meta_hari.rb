@@ -21,7 +21,7 @@ require 'meta_hari/spyglass'
 module MetaHari
   class <<self
     def spy(uri, iteration = 0)
-      uri = URI.parse uri unless uri.is_a? URI
+      uri = Helpers::AddressableFactory.parse uri.to_s
       spyglass = suitable_spyglass_instance uri, iteration
       spyglass.spy
     rescue RedirectNotification => redirect

@@ -1,5 +1,6 @@
 module MetaHari
   class Product
+    attr_reader :uri
     attr_reader :name
     attr_reader :image
     attr_reader :description
@@ -9,6 +10,7 @@ module MetaHari
     end
 
     def apply(attributes)
+      @uri         = attributes['uri']          if uri.nil?
       @name        = attributes['name']         if blank? name
       @image       = attributes['image']        if blank? image
       @description = attributes['description']  if blank? description

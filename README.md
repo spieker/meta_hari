@@ -33,8 +33,9 @@ In order to receive product informations, just pass the URL containing
 thous informations to the method `MetaHari.spy`.
 
 ```ruby
-product = MetaHari.spy('http://www.amazon.de/Gastroback-42429-Design-Wasserkocher-Advanced/dp/B000LQXC2Q/ref=sr_1_1')
-product.inspect # => #<MetaHari::Product:0x007fd9dba99158 @name="Gastroback 42429 Design Wasserkocher Advanced Pro", @image="http://ecx.images-amazon.com/images/I/814Yl6mxLsL._SL1500_.jpg", @description="">
+product = MetaHari.spy('www.amazon.de/Gastroback-42429-Design-Wasserkocher-Advanced/dp/B000LQXC2Q/ref=sr_1_1')
+product.inspect # => #<MetaHari::Product:0x007fa3429de030 @uri=#<Addressable::URI:0x3fd1a18d5c04 URI:http://www.amazon.de/Gastroback-42429-Design-Wasserkocher-Advanced/dp/B000LQXC2Q/ref=sr_1_1>, @name="Gastroback 42429 Design Wasserkocher Advanced Pro", @image="http://ecx.images-amazon.com/images/I/814Yl6mxLsL._SL1500_.jpg", @description="">
+product.uri.to_s # => http://www.amazon.de/Gastroback-42429-Design-Wasserkocher-Advanced/dp/B000LQXC2Q/ref=sr_1_1
 ```
 
 ## Implemented spyglasses

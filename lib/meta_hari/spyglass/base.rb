@@ -17,7 +17,7 @@ module MetaHari
 
       def spy
         spy_list.map { |method| send method }
-          .inject(MetaHari::Product.new) { |a, e| a.apply e }
+          .inject(MetaHari::Product.new 'uri' => uri) { |a, e| a.apply e }
       end
 
       protected

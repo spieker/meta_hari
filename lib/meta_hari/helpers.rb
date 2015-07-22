@@ -1,3 +1,4 @@
+require 'meta_hari/helpers/addressable_factory'
 require 'meta_hari/helpers/json_ld'
 require 'meta_hari/helpers/microdata'
 require 'meta_hari/helpers/open_graph'
